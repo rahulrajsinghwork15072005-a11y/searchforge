@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "searchforge"
+version = "0.1.0"
+description = "A hybrid search engine from scratch: positional inverted index, BM25, phrase/facets/snippets, typo tolerance, semantic blend, pairwise LTR, sharding with global IDF."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Rahul Raj Singh" }]
+keywords = ["search", "bm25", "inverted-index", "information-retrieval", "learning-to-rank"]
+
+[tool.setuptools]
+packages = ["searchforge"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "UP"]
+ignore = ["UP007", "UP006", "UP035", "RUF022", "RUF023", "SIM115"]
+
+[tool.ruff.lint.per-file-ignores]
+"cli.py" = ["C408"]
