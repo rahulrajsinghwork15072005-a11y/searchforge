@@ -2,31 +2,31 @@
 
 ```
  docs / crawled pages
-        │ tokenize (lower · stop words · light stem)
-        ▼
+ │ tokenize (lower · stop words · light stem)
+ ▼
  positional inverted index ────────────────► persisted JSON (atomic tmp+rename)
  term → [(doc, tf, [positions])]
  doc store + lengths + facets
-        │
- query parser ──► ParsedQuery                query.py
-   terms · phrases · exclusions · filters
-        │
+ │
+ query parser ──► ParsedQuery query.py
+ terms · phrases · exclusions · filters
+ │
  ┌──────┴───────────────┬──────────────────┐
- │ BM25 scorer          │ SpellCorrector    │ SemanticVectors
- │ k1=1.5 b=0.75        │ banded Levenshtein│ co-occurrence vectors
- │ candidate union      │ vocab-only fixes  │ cosine + PRF expansion
+ │ BM25 scorer │ SpellCorrector │ SemanticVectors
+ │ k1=1.5 b=0.75 │ banded Levenshtein│ co-occurrence vectors
+ │ candidate union │ vocab-only fixes │ cosine + PRF expansion
  └──────────┬───────────┴─────────┬─────────┘
-            ▼                     ▼
-       Searcher: score = bm25 + phrase_boost·hits
-                 (+ α-blend with cosine when hybrid)
-            │
-   snippets (<mark>, HTML-safe) · facet counts · autocomplete
-            │
-  RankNetLinear pairwise LTR over feature vectors (incl. semantic, CTR prior)
-            │
+ ▼ ▼
+ Searcher: score = bm25 + phrase_boost·hits
+ (+ α-blend with cosine when hybrid)
+ │
+ snippets (<mark>, HTML-safe) · facet counts · autocomplete
+ │
+ RankNetLinear pairwise LTR over feature vectors (incl. semantic, CTR prior)
+ │
  ShardedIndex: crc32 partitions · coordinator fans out with GLOBAL IDF
-            │
- HTTP API (/api/search JSON) + server-rendered UI     api.py
+ │
+ HTTP API (/api/search JSON) + server-rendered UI api.py
 ```
 
 ## Ranking math
@@ -57,7 +57,7 @@ signal for rerankers fed by real usage.
 
 IDF is a corpus-level property. If each shard computes IDF over only its own documents,
 the same term scores differently on different shards and merged rankings are wrong.
-`ShardedIndex.search()` therefore overrides each shard's scorer with the coordinator's
+`ShardedIndex.search` therefore overrides each shard's scorer with the coordinator's
 **global IDF** (summed df across shards), then merges by max-score. The test suite
 proves merged top-K equals a single monolithic index built from the same documents.
 
@@ -80,6 +80,6 @@ stack/frames/globals (VM).
 
 ## Evaluation
 
-TSV qrels (`query_id \t doc_id \t grade`) plus TSV queries drive `evaluate()`, which
+TSV qrels (`query_id \t doc_id \t grade`) plus TSV queries drive `evaluate`, which
 reports Precision@K, Recall@K, graded NDCG@K (log-discounted, ideal-DCG normalised)
 and MRR — the four numbers search interviews always ask about.

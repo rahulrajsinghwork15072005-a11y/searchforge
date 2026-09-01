@@ -8,9 +8,9 @@ and scaled across hash-partitioned shards with global-IDF fan-out.
 > Pure Python stdlib. Zero dependencies. CLI + HTTP API + server-rendered UI.
 
 ```
-P@5 / NDCG@5 / MRR   |  reported per query set via `cli.py eval`
-sharded vs single    |  merged rankings proven identical (global IDF)
-VM-free              |  everything is data structures + math you can whiteboard
+P@5 / NDCG@5 / MRR | reported per query set via `cli.py eval`
+sharded vs single | merged rankings proven identical (global IDF)
+VM-free | everything is data structures + math you can whiteboard
 ```
 
 ## Feature surface
@@ -38,14 +38,14 @@ VM-free              |  everything is data structures + math you can whiteboard
 
 ```bash
 pip install -e .
-python -m pytest          # 50 tests
+python -m pytest # 50 tests
 
 python cli.py index --corpus examples/corpus --out idx.json
 python cli.py search "flask django" --index idx.json
 python cli.py search '"web development"' --index idx.json
-python cli.py serve --index idx.json --port 8805     # UI at /
+python cli.py serve --index idx.json --port 8805 # UI at /
 python cli.py eval --queries q.tsv --qrels qrels.tsv --index idx.json
-python cli.py conform                                 # engine agreement checks
+python cli.py conform # engine agreement checks
 ```
 
 Query syntax examples: `python -snake`, `"web development"`,
